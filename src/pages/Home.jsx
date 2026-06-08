@@ -7,7 +7,7 @@ function Home() {
 
       <div className="card">
 
-        <h1>Gender Detection AI</h1>
+        <h1>Gender Age Detector AI</h1>
 
         <p className="subtitle">
           Capture your image or upload one and let AI predict the gender

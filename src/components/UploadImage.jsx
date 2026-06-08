@@ -7,6 +7,7 @@ function UploadImage() {
   const [prediction, setPrediction] = useState("");
   const [age, setAge] = useState("");
   const [confidence, setConfidence] = useState("");
+  const [race, setRace] = useState("");
 
   const handleImageChange = (e) => {
 
@@ -20,6 +21,7 @@ function UploadImage() {
       setImage(reader.result);
       setPrediction("");
       setConfidence("");
+      setRace("");
     };
 
     reader.readAsDataURL(file);
@@ -34,7 +36,7 @@ function UploadImage() {
 
     try {
 
-      const response = await fetch("http://127.0.0.1:5000/predict", {
+      const response = await fetch("https://gender-detection-backend.onrender.com/predict", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -48,10 +50,12 @@ function UploadImage() {
 
      if (data.gender === "No Face Detected") {
       setPrediction("No Face Detected");
+      setRace("");
       setConfidence("");
     } else {
       setPrediction(data.gender || "Unknown");
       setAge(data.age || "");
+      setRace(data.race || "");
       setConfidence(data.confidence || "");
     }
 
@@ -129,7 +133,12 @@ function UploadImage() {
       <span className="value">{age} years</span>
     </div>
   )}
-
+{race && (
+  <div className="result-row">
+    <span className="label">Race</span>
+    <span className="value">{race}</span>
+  </div>
+)}
   {confidence && (
     <div className="result-row">
       <span className="label">Confidence</span>

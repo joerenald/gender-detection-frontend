@@ -10,6 +10,7 @@ function WebcamCapture() {
   const [age, setAge] = useState("");
   const [confidence, setConfidence] = useState("");
   const [scanning, setScanning] = useState(false);
+  const [race, setRace] = useState("");
 
   const capture = async () => {
 
@@ -26,7 +27,7 @@ function WebcamCapture() {
 
     try {
 
-      const response = await fetch("http://127.0.0.1:5000/predict", {
+      const response = await fetch("https://gender-detection-backend.onrender.com/predict", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -44,10 +45,12 @@ function WebcamCapture() {
     if (data.gender === "No Face Detected") {
      setPrediction("No Face Detected");
      setAge("-");
+     setRace("-");
      setConfidence("-");
     } else {
        setPrediction(data.gender || "Unknown");
        setAge(data.age || "");
+        setRace(data.race || ""); 
        setConfidence(data.confidence || "");
      }
 
@@ -108,7 +111,10 @@ function WebcamCapture() {
     <span className="label">Age :</span>
     <span className="value">{age ? `${age} years` : "-"}</span>
   </div>
-
+<div className="result-row">
+  <span className="label">Race :</span>
+  <span className="value">{race ? race : "-"}</span>
+</div>
   <div className="result-row">
     <span className="label">Confidence :</span>
     <span className="value">{confidence ? `${confidence}%` : "-"}</span>
@@ -121,6 +127,7 @@ function WebcamCapture() {
             onClick={() => {
               setImage(null);
               setPrediction("");
+               setRace(""); 
               setConfidence("");
             }}
           >
