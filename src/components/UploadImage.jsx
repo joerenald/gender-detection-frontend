@@ -48,7 +48,11 @@ function UploadImage() {
         }
       );
 
-      const data = await response.json();
+      if (!response.ok) {
+  throw new Error("Server Error");
+}
+
+const data = await response.json();
 
       if (data.gender === "No Face Detected") {
 

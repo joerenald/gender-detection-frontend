@@ -79,8 +79,8 @@ function WebcamCapture() {
             ref={webcamRef}
             screenshotFormat="image/jpeg"
             videoConstraints={{
-              width: 640,
-              height: 480,
+              width: 320,
+              height: 240,
               facingMode: "user"
             }}
             className="camera"
