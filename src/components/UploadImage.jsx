@@ -36,7 +36,7 @@ function UploadImage() {
     try {
 
       const response = await fetch(
-        "https://gender-detection-backend.onrender.com/predict",
+        "https://JoeReno-gender-age-detector-api.hf.space",
         {
           method: "POST",
           headers: {
