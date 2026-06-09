@@ -36,7 +36,7 @@ function UploadImage() {
     try {
 
       const response = await fetch(
-        "https://JoeReno-gender-age-detector-api.hf.space",
+        "https://joereno-gender-age-detector-api.hf.space",
         {
           method: "POST",
           headers: {
