@@ -7,7 +7,6 @@ function UploadImage() {
   const [prediction, setPrediction] = useState("");
   const [age, setAge] = useState("");
   const [confidence, setConfidence] = useState("");
-  const [race, setRace] = useState("");
 
   const handleImageChange = (e) => {
 
@@ -20,8 +19,8 @@ function UploadImage() {
       setPreview(reader.result);
       setImage(reader.result);
       setPrediction("");
+      setAge("");
       setConfidence("");
-      setRace("");
     };
 
     reader.readAsDataURL(file);
@@ -36,28 +35,34 @@ function UploadImage() {
 
     try {
 
-      const response = await fetch("https://gender-detection-backend.onrender.com/predict", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          image: image
-        })
-      });
+      const response = await fetch(
+        "https://gender-detection-backend.onrender.com/predict",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            image: image
+          })
+        }
+      );
 
-     const data = await response.json();
+      const data = await response.json();
 
-     if (data.gender === "No Face Detected") {
-      setPrediction("No Face Detected");
-      setRace("");
-      setConfidence("");
-    } else {
-      setPrediction(data.gender || "Unknown");
-      setAge(data.age || "");
-      setRace(data.race || "");
-      setConfidence(data.confidence || "");
-    }
+      if (data.gender === "No Face Detected") {
+
+        setPrediction("No Face Detected");
+        setAge("");
+        setConfidence("");
+
+      } else {
+
+        setPrediction(data.gender || "Unknown");
+        setAge(data.age || "");
+        setConfidence(data.confidence || "");
+
+      }
 
     } catch (error) {
 
@@ -73,32 +78,29 @@ function UploadImage() {
     <div className="upload-section">
 
       <h2 className="upload-title">Upload Image</h2>
-      {/* Upload Box */}
-<div className="upload-box">
 
-  <label htmlFor="fileInput" className="upload-label">
+      <div className="upload-box">
 
-    <div className="upload-icon">📤</div>
+        <label htmlFor="fileInput" className="upload-label">
 
-    <div className="upload-text">
-      Drag & Drop or Click to Upload Image
-    </div>
+          <div className="upload-icon">📤</div>
 
-    <input
-      id="fileInput"
-      type="file"
-      accept="image/*"
-      onChange={handleImageChange}
-      hidden
-    />
+          <div className="upload-text">
+            Drag & Drop or Click to Upload Image
+          </div>
 
-  </label>
+          <input
+            id="fileInput"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            hidden
+          />
 
-</div>
+        </label>
 
-  
+      </div>
 
-      {/* Image Preview */}
       {preview && (
         <div className="preview-container">
           <img
@@ -109,9 +111,9 @@ function UploadImage() {
         </div>
       )}
 
-      {/* Buttons */}
       {preview && (
         <div className="action-container">
+
           <button
             className="predict-btn"
             onClick={sendImage}
@@ -120,34 +122,32 @@ function UploadImage() {
           </button>
 
           {prediction && (
-         <div className="result-box">
 
-  <div className="result-row">
-    <span className="label">Gender</span>
-    <span className="value">{prediction}</span>
-  </div>
+            <div className="result-box">
 
-  {age && (
-    <div className="result-row">
-      <span className="label">Age</span>
-      <span className="value">{age} years</span>
-    </div>
-  )}
-{race && (
-  <div className="result-row">
-    <span className="label">Race</span>
-    <span className="value">{race}</span>
-  </div>
-)}
-  {confidence && (
-    <div className="result-row">
-      <span className="label">Confidence</span>
-      <span className="value">{confidence}%</span>
-    </div>
-  )}
+              <div className="result-row">
+                <span className="label">Gender</span>
+                <span className="value">{prediction}</span>
+              </div>
 
-</div>
+              {age && (
+                <div className="result-row">
+                  <span className="label">Age</span>
+                  <span className="value">{age} years</span>
+                </div>
+              )}
+
+              {confidence && (
+                <div className="result-row">
+                  <span className="label">Confidence</span>
+                  <span className="value">{confidence}%</span>
+                </div>
+              )}
+
+            </div>
+
           )}
+
         </div>
       )}
 

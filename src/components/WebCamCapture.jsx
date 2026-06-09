@@ -10,13 +10,11 @@ function WebcamCapture() {
   const [age, setAge] = useState("");
   const [confidence, setConfidence] = useState("");
   const [scanning, setScanning] = useState(false);
-  const [race, setRace] = useState("");
 
   const capture = async () => {
 
     const imageSrc = webcamRef.current.getScreenshot();
 
-    // Prevent null capture
     if (!imageSrc) {
       alert("Camera capture failed");
       return;
@@ -27,32 +25,36 @@ function WebcamCapture() {
 
     try {
 
-      const response = await fetch("https://gender-detection-backend.onrender.com/predict", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          image: imageSrc
-        })
-      });
+      const response = await fetch(
+        "https://gender-detection-backend.onrender.com/predict",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            image: imageSrc
+          })
+        }
+      );
 
       const data = await response.json();
 
       console.log("API Response:", data);
 
-      // Correct key from backend
-    if (data.gender === "No Face Detected") {
-     setPrediction("No Face Detected");
-     setAge("-");
-     setRace("-");
-     setConfidence("-");
-    } else {
-       setPrediction(data.gender || "Unknown");
-       setAge(data.age || "");
-        setRace(data.race || ""); 
-       setConfidence(data.confidence || "");
-     }
+      if (data.gender === "No Face Detected") {
+
+        setPrediction("No Face Detected");
+        setAge("");
+        setConfidence("");
+
+      } else {
+
+        setPrediction(data.gender || "Unknown");
+        setAge(data.age || "");
+        setConfidence(data.confidence || "");
+
+      }
 
     } catch (error) {
 
@@ -84,13 +86,20 @@ function WebcamCapture() {
             className="camera"
           />
 
-          {scanning && <div className="scan-line">Scanning...</div>}
+          {scanning && (
+            <div className="scan-line">
+              Scanning...
+            </div>
+          )}
 
         </div>
       )}
 
       {!image && (
-        <button className="capture-btn" onClick={capture}>
+        <button
+          className="capture-btn"
+          onClick={capture}
+        >
           {scanning ? "Scanning..." : "Scan with AI"}
         </button>
       )}
@@ -98,36 +107,41 @@ function WebcamCapture() {
       {image && (
         <div className="result-box">
 
-          <img src={image} className="preview" alt="Captured" />
+          <img
+            src={image}
+            className="preview"
+            alt="Captured"
+          />
 
-        <div className="result-text">
+          <div className="result-text">
 
-  <div className="result-row">
-    <span className="label">Gender :</span>
-    <span className="value">{prediction}</span>
-  </div>
+            <div className="result-row">
+              <span className="label">Gender :</span>
+              <span className="value">{prediction}</span>
+            </div>
 
-  <div className="result-row">
-    <span className="label">Age :</span>
-    <span className="value">{age ? `${age} years` : "-"}</span>
-  </div>
-<div className="result-row">
-  <span className="label">Race :</span>
-  <span className="value">{race ? race : "-"}</span>
-</div>
-  <div className="result-row">
-    <span className="label">Confidence :</span>
-    <span className="value">{confidence ? `${confidence}%` : "-"}</span>
-  </div>
+            <div className="result-row">
+              <span className="label">Age :</span>
+              <span className="value">
+                {age ? `${age} years` : "-"}
+              </span>
+            </div>
 
-</div>
+            <div className="result-row">
+              <span className="label">Confidence :</span>
+              <span className="value">
+                {confidence ? `${confidence}%` : "-"}
+              </span>
+            </div>
+
+          </div>
 
           <button
             className="capture-btn"
             onClick={() => {
               setImage(null);
               setPrediction("");
-               setRace(""); 
+              setAge("");
               setConfidence("");
             }}
           >
