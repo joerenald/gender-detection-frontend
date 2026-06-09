@@ -7,7 +7,7 @@ function UploadImage() {
   const [prediction, setPrediction] = useState("");
   const [age, setAge] = useState("");
   const [confidence, setConfidence] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const handleImageChange = (e) => {
 
     const file = e.target.files[0];
@@ -28,60 +28,55 @@ function UploadImage() {
 
   const sendImage = async () => {
 
-    if (!image) {
-      alert("Please select an image first");
-      return;
-    }
+  if (!image) {
+    alert("Please select an image first");
+    return;
+  }
 
-    try {
+  setLoading(true);
 
-      const response = await fetch(
-        "https://joereno-gender-age-detector-api.hf.space/predict",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            image: image
-          })
-        }
-      );
+  try {
 
-      if (!response.ok) {
-  throw new Error("Server Error");
-}
-
-if (!response.ok) {
-  const text = await response.text();
-  console.log("Server Response:", text);
-  throw new Error("Server Error");
-}
-
-const data = await response.json();
-
-      if (data.gender === "No Face Detected") {
-
-        setPrediction("No Face Detected");
-        setAge("");
-        setConfidence("");
-
-      } else {
-
-        setPrediction(data.gender || "Unknown");
-        setAge(data.age || "");
-        setConfidence(data.confidence || "");
-
+    const response = await fetch(
+      "https://joereno-gender-age-detector-api.hf.space/predict",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          image: image
+        })
       }
+    );
 
-    } catch (error) {
+    const data = await response.json();
 
-      console.log("Error:", error);
-      alert("Prediction failed");
+    if (data.gender === "No Face Detected") {
+
+      setPrediction("No Face Detected");
+      setAge("");
+      setConfidence("");
+
+    } else {
+
+      setPrediction(data.gender || "Unknown");
+      setAge(data.age || "");
+      setConfidence(data.confidence || "");
 
     }
 
-  };
+  } catch (error) {
+
+    console.log("Error:", error);
+    alert("Prediction failed");
+
+  } finally {
+
+    setLoading(false);
+
+  }
+};
 
   return (
 
@@ -125,11 +120,12 @@ const data = await response.json();
         <div className="action-container">
 
           <button
-            className="predict-btn"
-            onClick={sendImage}
-          >
-            Predict
-          </button>
+  className="predict-btn"
+  onClick={sendImage}
+  disabled={loading}
+>
+  {loading ? "⏳ Analyzing..." : "Predict"}
+</button>
 
           {prediction && (
 

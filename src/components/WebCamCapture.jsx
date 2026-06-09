@@ -103,11 +103,12 @@ const data = await response.json();
 
       {!image && (
         <button
-          className="capture-btn"
-          onClick={capture}
-        >
-          {scanning ? "Scanning..." : "Scan with AI"}
-        </button>
+  className="capture-btn"
+  onClick={capture}
+  disabled={scanning}
+>
+  {scanning ? "⏳ Analyzing..." : "Scan with AI"}
+</button>
       )}
 
       {image && (
