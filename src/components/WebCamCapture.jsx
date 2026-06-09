@@ -26,7 +26,7 @@ function WebcamCapture() {
     try {
 
       const response = await fetch(
-        "https://joereno-gender-age-detector-api.hf.space",
+        "https://joereno-gender-age-detector-api.hf.space/predict",
         {
           method: "POST",
           headers: {
@@ -38,7 +38,13 @@ function WebcamCapture() {
         }
       );
 
-      const data = await response.json();
+      if (!response.ok) {
+  const text = await response.text();
+  console.log("Server Response:", text);
+  throw new Error("Server Error");
+}
+
+const data = await response.json();
 
       console.log("API Response:", data);
 

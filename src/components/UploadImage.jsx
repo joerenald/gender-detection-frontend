@@ -36,7 +36,7 @@ function UploadImage() {
     try {
 
       const response = await fetch(
-        "https://joereno-gender-age-detector-api.hf.space",
+        "https://joereno-gender-age-detector-api.hf.space/predict",
         {
           method: "POST",
           headers: {
@@ -49,6 +49,12 @@ function UploadImage() {
       );
 
       if (!response.ok) {
+  throw new Error("Server Error");
+}
+
+if (!response.ok) {
+  const text = await response.text();
+  console.log("Server Response:", text);
   throw new Error("Server Error");
 }
 
